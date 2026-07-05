@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Moon, Sun } from "lucide-react";
+import { Menu, Moon, Sun, X } from "lucide-react";
 import { useState } from "react";
 
 const Navbar = ({ darkMode, toggleDarkMode }) => {
@@ -113,7 +113,84 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
 							Hire Me
 						</motion.a>
 					</div>
+					{/* mobile menu */}
+					<div className="flex lg:hiddn items-center space-x-4 px-2">
+						<motion.button
+							whileTap={{ scale: 0.9 }}
+							onClick={() => setIsMenuOpen(!isMenuOpen)}
+							className={`p-2 rounded-lg ${
+								darkMode ? `bg-gray-700` : `bg-gray-200`
+							}`}
+						>
+							{isMenuOpen ? (
+								<X
+									className={`w-5 h-5 ${
+										darkMode ? `text-white` : `bg-gray-700`
+									}`}
+								/>
+							) : (
+								<Menu
+									className={`w-5 h-5 ${
+										darkMode ? `text-white` : `text-gray-700`
+									}`}
+								/>
+							)}
+						</motion.button>
+					</div>
 				</div>
+				{isMenuOpen && (
+					<motion.div
+						initial={{ opacity: 0, height: 0 }}
+						animate={{ opacity: 1, height: "auto" }}
+						exit={{ opacity: 0, height: 0 }}
+						transition={{ duration: 0.3 }}
+						className={`absolute top-full left-0 right-0 mt-2 lg:hidden
+						${darkMode ? `bg-gray-900` : `bg-white`} backdrop-blur-lg rounded-xl shadow-lg border ${
+							darkMode ? `border-gray-700` : `border-gray-200`
+						}`}
+					>
+						<div className="px-4 py-3 space-y-2">
+							{navList.map((list) => (
+								<a
+									key={list.title}
+									href={list.link}
+									onClick={() => handleNavListClick(list.title)}
+									className="block"
+								>
+									<motion.div
+										whileHover={{ x: 5 }}
+										className={`py-3 px-4 rounded-lg text-center
+									${
+										activeSection === list.title.toLowerCase()
+											? darkMode
+												? `bg-gray-800`
+												: `bg-orange-50`
+											: ""
+									}`}
+									>
+										<span
+											className={`font-medium ${
+												activeSection === list.title.toLowerCase()
+													? `${theme.textActive} border-l-2 border-orange-600 pl-2`
+													: theme.textSecondary
+											} hover:${theme.textActive} hover:border-l-2 pl-2`}
+										>
+											{list.title}
+										</span>
+									</motion.div>
+								</a>
+							))}
+							<motion.a
+								href="#contact"
+								onClick={() => setIsMenuOpen(false)}
+								whileTap={{ scale: 0.95 }}
+								className={`block py-3 px-4 text-center font-semibold rounded-lg bg-linear-to-r ${theme.btnBg} text-white shadow-md`}
+							>
+								Hire Me
+							</motion.a>
+						</div>
+					</motion.div>
+				)}
 			</motion.nav>
 		</div>
 	);
